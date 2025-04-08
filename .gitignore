@@ -1,0 +1,29 @@
+# Kotlin/Gradle/Android
+*.iml
+.gradle
+**/build/
+!src/**/build/
+local.properties
+.idea
+.kotlin
+.DS_Store
+captures
+.externalNativeBuild
+.cxx
+
+# Gradle wrapper (don’t ignore these!)
+!gradlew
+!gradlew.bat
+!gradle/wrapper/gradle-wrapper.properties
+!gradle/wrapper/gradle-wrapper.jar
+
+# Xcode/iOS
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+**/xcshareddata/WorkspaceSettings.xcsettings
+*.xccheckout
+*.xcuserstate
+xcuserdata
