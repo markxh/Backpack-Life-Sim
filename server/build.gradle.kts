@@ -11,6 +11,11 @@ application {
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=${extra["io.ktor.development"] ?: "false"}")
 }
 
+repositories {
+    mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
+}
+
 dependencies {
     implementation(projects.shared)
     implementation(libs.logback)
