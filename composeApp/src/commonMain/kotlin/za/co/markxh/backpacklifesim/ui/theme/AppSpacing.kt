@@ -9,4 +9,7 @@ object AppSpacing {
     val extraLarge = 32.dp
     val doubleExtraLarge = 40.dp
     val cardWidth = 300.dp
+
+    val mapXPositions = listOf(20.dp, 100.dp, 180.dp, 260.dp, 340.dp)
+    val mapYPositions = listOf(20.dp, 60.dp, 40.dp, 100.dp, 80.dp)
 }

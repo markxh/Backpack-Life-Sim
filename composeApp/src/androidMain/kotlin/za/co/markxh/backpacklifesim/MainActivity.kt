@@ -6,8 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import za.co.markxh.backpacklifesim.ui.AndroidBackpackScreen
+import za.co.markxh.backpacklifesim.navigation.BackpackNavGraph
 import za.co.markxh.backpacklifesim.ui.BackpackViewModel
 
 class MainActivity : ComponentActivity() {
@@ -18,7 +19,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                AndroidBackpackScreen()
+                val navController = rememberNavController()
+
+                BackpackNavGraph(
+                    navController = navController,
+                    viewModel = viewModel
+                )
             }
         }
     }

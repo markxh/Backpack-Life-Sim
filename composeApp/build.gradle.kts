@@ -38,6 +38,7 @@ kotlin {
             implementation(libs.ktor.client.android)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.navigation.compose)
         }
         commonMain.dependencies {
             implementation(libs.koin.core)
@@ -94,6 +95,7 @@ android {
 
 dependencies {
     implementation(libs.firebase.crashlytics.buildtools)
+    implementation(libs.androidx.foundation.android)
     debugImplementation(compose.uiTooling)
 }
 

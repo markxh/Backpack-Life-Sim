@@ -1,0 +1,97 @@
+package za.co.markxh.backpacklifesim.ui
+
+import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import za.co.markxh.backpacklifesim.domain.model.Choice
+import za.co.markxh.backpacklifesim.domain.model.Decision
+import za.co.markxh.backpacklifesim.state.BackpackState
+import za.co.markxh.backpacklifesim.state.LifePathState
+import za.co.markxh.backpacklifesim.util.Clock
+
+class BackpackViewModel(
+    private val loadBackpackUseCase: LoadBackpackUseCase,
+    private val submitChoicesUseCase: SubmitChoicesUseCase,
+    private val loadLifePathUseCase: LoadLifePathUseCase,
+    private val clock: Clock
+) : ViewModel() {
+
+    private val _backpackState = MutableStateFlow<BackpackState>(BackpackState.Loading)
+    val backpackState: StateFlow<BackpackState> = _backpackState
+
+    private val _lifePathState = MutableStateFlow<LifePathState>(LifePathState.Loading)
+    val lifePathState: StateFlow<LifePathState> = _lifePathState
+
+    private val _selectedChoices = mutableStateListOf<Choice>()
+    val selectedChoices: List<Choice> get() = _selectedChoices
+
+    private var submitStartTime: Long? = null
+
+    fun loadBackpack() {
+        viewModelScope.launch {
+            _backpackState.value = BackpackState.Loading
+            try {
+                val backpack = loadBackpackUseCase()
+                _selectedChoices.clear()
+                _backpackState.value = BackpackState.Loaded(backpack)
+            } catch (e: Exception) {
+                _backpackState.value = BackpackState.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    private fun loadLifePath() {
+        viewModelScope.launch {
+            _lifePathState.value = LifePathState.Loading
+            try {
+                val lifePath = loadLifePathUseCase() // Inject this use case
+                _lifePathState.value = LifePathState.Loaded(lifePath)
+            } catch (e: Exception) {
+                _lifePathState.value = LifePathState.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    fun updateChoice(itemId: String, name: String, decision: Decision) {
+        _selectedChoices.removeAll { it.itemId == itemId }
+        _selectedChoices.add(Choice(itemId = itemId, name = name, decision = decision))
+    }
+
+    fun finalizeSubmission() {
+        recordSubmissionStartTime()
+        submitChoices()
+        loadLifePath()
+    }
+
+    private fun submitChoices() {
+        recordSubmissionStartTime()
+        viewModelScope.launch {
+            _backpackState.value = BackpackState.Loading
+            try {
+                submitChoicesUseCase(_selectedChoices)
+                _backpackState.value = BackpackState.Submitted
+            } catch (e: Exception) {
+                _backpackState.value = BackpackState.Error("Failed to submit choices: ${e.message}")
+            }
+        }
+    }
+
+    private fun recordSubmissionStartTime() {
+        submitStartTime = clock.currentTimeMillis()
+    }
+
+    fun timeSinceSubmission(): Long {
+        val now = clock.currentTimeMillis()
+        return now - (submitStartTime ?: now)
+    }
+
+    fun clearState() {
+        _selectedChoices.clear()
+        _backpackState.value = BackpackState.Loading
+        submitStartTime = null
+    }
+}
+
