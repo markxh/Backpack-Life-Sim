@@ -67,7 +67,6 @@ class BackpackViewModel(
     }
 
     private fun submitChoices() {
-        recordSubmissionStartTime()
         viewModelScope.launch {
             _backpackState.value = BackpackState.Loading
             try {

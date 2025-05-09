@@ -3,10 +3,10 @@ package za.co.markxh.backpacklifesim.ui
 import za.co.markxh.backpacklifesim.domain.model.Choice
 import za.co.markxh.backpacklifesim.domain.repository.BackpackRepository
 
-class SubmitChoicesUseCase(
+open class SubmitChoicesUseCase(
     private val backpackRepository: BackpackRepository
 ) {
-    suspend operator fun invoke(choices: List<Choice>) {
+    open suspend operator fun invoke(choices: List<Choice>) {
         backpackRepository.submitChoices(choices)
     }
 }

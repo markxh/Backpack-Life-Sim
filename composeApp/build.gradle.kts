@@ -1,5 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -11,7 +9,6 @@ plugins {
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -29,7 +26,7 @@ kotlin {
     }
     
     sourceSets {
-        
+
         androidMain.dependencies {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
@@ -57,6 +54,11 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
             implementation(libs.coil.network.okhttp)
+        }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.turbine)
+            implementation(libs.coroutines.test)
         }
     }
 }
