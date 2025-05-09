@@ -10,6 +10,7 @@ import za.co.markxh.backpacklifesim.domain.model.Choice
 import za.co.markxh.backpacklifesim.domain.model.Decision
 import za.co.markxh.backpacklifesim.state.BackpackState
 import za.co.markxh.backpacklifesim.state.LifePathState
+import za.co.markxh.backpacklifesim.ui.theme.AppStrings
 import za.co.markxh.backpacklifesim.util.Clock
 
 class BackpackViewModel(
@@ -38,7 +39,7 @@ class BackpackViewModel(
                 _selectedChoices.clear()
                 _backpackState.value = BackpackState.Loaded(backpack)
             } catch (e: Exception) {
-                _backpackState.value = BackpackState.Error(e.message ?: "Unknown error")
+                _backpackState.value = BackpackState.Error(e.message ?: AppStrings.errorOccurred)
             }
         }
     }
@@ -47,10 +48,10 @@ class BackpackViewModel(
         viewModelScope.launch {
             _lifePathState.value = LifePathState.Loading
             try {
-                val lifePath = loadLifePathUseCase() // Inject this use case
+                val lifePath = loadLifePathUseCase()
                 _lifePathState.value = LifePathState.Loaded(lifePath)
             } catch (e: Exception) {
-                _lifePathState.value = LifePathState.Error(e.message ?: "Unknown error")
+                _lifePathState.value = LifePathState.Error(e.message ?: AppStrings.errorOccurred)
             }
         }
     }
@@ -63,7 +64,6 @@ class BackpackViewModel(
     fun finalizeSubmission() {
         recordSubmissionStartTime()
         submitChoices()
-        loadLifePath()
     }
 
     private fun submitChoices() {
@@ -73,8 +73,9 @@ class BackpackViewModel(
             try {
                 submitChoicesUseCase(_selectedChoices)
                 _backpackState.value = BackpackState.Submitted
+                loadLifePath()
             } catch (e: Exception) {
-                _backpackState.value = BackpackState.Error("Failed to submit choices: ${e.message}")
+                _backpackState.value = BackpackState.Error(AppStrings.errorOccurred)
             }
         }
     }
@@ -86,12 +87,6 @@ class BackpackViewModel(
     fun timeSinceSubmission(): Long {
         val now = clock.currentTimeMillis()
         return now - (submitStartTime ?: now)
-    }
-
-    fun clearState() {
-        _selectedChoices.clear()
-        _backpackState.value = BackpackState.Loading
-        submitStartTime = null
     }
 }
 

@@ -1,25 +1,27 @@
 package za.co.markxh.backpacklifesim.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -47,10 +49,11 @@ import za.co.markxh.backpacklifesim.state.BackpackState
 import za.co.markxh.backpacklifesim.ui.theme.AppSpacing
 import za.co.markxh.backpacklifesim.ui.theme.AppStrings
 import za.co.markxh.backpacklifesim.ui.theme.BackgroundColor
-import za.co.markxh.backpacklifesim.ui.theme.ButtonTextColor
+import za.co.markxh.backpacklifesim.ui.theme.CyanAccent
+import za.co.markxh.backpacklifesim.ui.theme.GreenAccent
 import za.co.markxh.backpacklifesim.ui.theme.PrimaryColor
+import za.co.markxh.backpacklifesim.ui.theme.RedAccent
 import za.co.markxh.backpacklifesim.ui.theme.SecondaryTextColor
-import za.co.markxh.backpacklifesim.ui.theme.UnselectedButtonColor
 
 @Composable
 fun BackpackScreen(
@@ -105,8 +108,19 @@ fun BackpackItemList(
         modifier = modifier
             .fillMaxSize()
             .padding(AppSpacing.medium),
-        verticalArrangement = Arrangement.spacedBy(AppSpacing.medium)
+        verticalArrangement = Arrangement.spacedBy(AppSpacing.medium),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        item {
+            Text(
+                text = AppStrings.todaysBackpack,
+                style = MaterialTheme.typography.h5,
+                color = PrimaryColor,
+                modifier = Modifier
+                    .padding(AppSpacing.medium)
+            )
+        }
+
         items(items) { item ->
             if (selectedChoices.none { it.itemId == item.id }) {
                 ItemCard(item = item, onItemChoice = onItemChoice)
@@ -115,29 +129,106 @@ fun BackpackItemList(
     }
 }
 
+//@Composable
+//fun ItemCard(
+//    item: Item,
+//    onItemChoice: (itemId: String, name: String, decision: Decision) -> Unit
+//) {
+//    var visible by remember { mutableStateOf(true) }
+//    val scope = rememberCoroutineScope()
+//
+//    AnimatedVisibility(
+//        visible = visible,
+//        exit = slideOutHorizontally(
+//            targetOffsetX = { fullWidth -> fullWidth },
+//            animationSpec = tween(durationMillis = 300)
+//        ) + fadeOut(animationSpec = tween(durationMillis = 300))
+//    ) {
+//        Card(
+//            elevation = AppSpacing.small,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(bottom = AppSpacing.small)
+//        ) {
+//            Row(
+//                modifier = Modifier.padding(AppSpacing.medium),
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                AsyncImage(
+//                    model = item.imageUrl,
+//                    contentDescription = item.name,
+//                    modifier = Modifier
+//                        .clip(MaterialTheme.shapes.medium)
+//                        .weight(1f)
+//                )
+//
+//                Spacer(modifier = Modifier.width(AppSpacing.medium))
+//
+//                Column(
+//                    verticalArrangement = Arrangement.spacedBy(AppSpacing.small),
+//                    modifier = Modifier.weight(1f)
+//                ) {
+//                    Text(item.name, style = MaterialTheme.typography.h6, color = PrimaryColor)
+//                    Text(item.description, style = MaterialTheme.typography.body2, color = SecondaryTextColor)
+//
+//                    Spacer(modifier = Modifier.height(AppSpacing.small))
+//
+//                    Decision.entries.forEach { decision ->
+//                        Button(
+//                            onClick = {
+//                                visible = false
+//                                scope.launch {
+//                                    delay(300)
+//                                    onItemChoice(item.id, item.name, decision)
+//                                }
+//                            },
+//                            colors = ButtonDefaults.buttonColors(
+//                                backgroundColor = Color.Transparent,
+//                                contentColor = PrimaryColor
+//                            ),
+//                            modifier = Modifier.fillMaxWidth(),
+//                            elevation = ButtonDefaults.elevation(defaultElevation = 0.dp, pressedElevation = 0.dp)
+//                        ) {
+//                            Text(
+//                                decision.name.lowercase().replaceFirstChar { it.uppercase() },
+//                                color = PrimaryColor
+//                            )
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+
 @Composable
 fun ItemCard(
     item: Item,
     onItemChoice: (itemId: String, name: String, decision: Decision) -> Unit
 ) {
-    var visible by remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
+    var visible by remember { mutableStateOf(true) }
+
+    val animatedOffsetX by animateDpAsState(
+        targetValue = if (visible) 0.dp else 500.dp,
+        animationSpec = tween(durationMillis = 300),
+        label = "DismissAnimation"
+    )
 
     AnimatedVisibility(
         visible = visible,
-        exit = slideOutHorizontally(
-            targetOffsetX = { fullWidth -> fullWidth },
-            animationSpec = tween(durationMillis = 300)
-        ) + fadeOut(animationSpec = tween(durationMillis = 300))
+        exit = shrinkHorizontally(animationSpec = tween(300)) + fadeOut(tween(300))
     ) {
         Card(
             elevation = AppSpacing.small,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = AppSpacing.small)
+                .offset(x = animatedOffsetX)
         ) {
             Row(
-                modifier = Modifier.padding(AppSpacing.medium),
+                modifier = Modifier
+                    .padding(AppSpacing.medium)
+                    .height(IntrinsicSize.Min),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
@@ -152,30 +243,50 @@ fun ItemCard(
 
                 Column(
                     verticalArrangement = Arrangement.spacedBy(AppSpacing.small),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
                 ) {
                     Text(item.name, style = MaterialTheme.typography.h6, color = PrimaryColor)
-                    Text(item.description, style = MaterialTheme.typography.body2, color = SecondaryTextColor)
+                    Text(item.description, style = MaterialTheme.typography.subtitle2, color = SecondaryTextColor)
+                    Text(
+                        "Type: ${item.type.name.lowercase().replaceFirstChar { it.uppercase() }}",
+                        style = MaterialTheme.typography.overline,
+                        color = SecondaryTextColor
+                    )
+                    Text(
+                        "Rarity: ${item.rarity.name.lowercase().replaceFirstChar { it.uppercase() }}",
+                        style = MaterialTheme.typography.overline,
+                        color = SecondaryTextColor
+                    )
+                    Text(
+                        "Effect: ${item.effect}",
+                        style = MaterialTheme.typography.overline,
+                        color = SecondaryTextColor
+                    )
 
-                    Spacer(modifier = Modifier.height(AppSpacing.small))
+                    Spacer(modifier = Modifier.weight(1f))
 
-                    Decision.entries.forEach { decision ->
-                        Button(
-                            onClick = {
-                                visible = false
-                                scope.launch {
-                                    delay(300)
-                                    onItemChoice(item.id, item.name, decision)
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = UnselectedButtonColor
-                            ),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Decision.entries.forEach { decision ->
                             Text(
-                                decision.name.lowercase().replaceFirstChar { it.uppercase() },
-                                color = ButtonTextColor
+                                decision.displayName(),
+                                style = MaterialTheme.typography.subtitle2,
+                                color = when (decision) {
+                                    Decision.KEEP -> GreenAccent
+                                    Decision.USE -> CyanAccent
+                                    Decision.TOSS -> RedAccent
+                                },
+                                modifier = Modifier.clickable {
+                                    visible = false
+                                    scope.launch {
+                                        delay(300)
+                                        onItemChoice(item.id, item.name, decision)
+                                    }
+                                }
                             )
                         }
                     }

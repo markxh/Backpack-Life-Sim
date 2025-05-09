@@ -2,9 +2,9 @@ package za.co.markxh.backpacklifesim.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val PrimaryColor = Color(0xFF212121)           // Almost black
-val SecondaryTextColor = Color(0xFF424242)         // Dark grey
-val SelectedButtonColor = Color(0xFF333333)        // Very dark grey for selected
-val UnselectedButtonColor = Color(0xFF757575)      // Medium grey for unselected
-val ButtonTextColor = Color.White
-val BackgroundColor = Color(0xFFEEEEEE)            // Very light grey
+val PrimaryColor = Color(0xFF212121)
+val SecondaryTextColor = Color(0xFF424242)
+val BackgroundColor = Color(0xFFEEEEEE)
+val CyanAccent = Color(0xFF0FC3E1)
+val GreenAccent = Color(0xFF40A33B)
+val RedAccent = Color(0xFFE04F4F)

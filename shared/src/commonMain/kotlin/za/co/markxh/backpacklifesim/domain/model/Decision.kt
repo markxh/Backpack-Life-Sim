@@ -11,9 +11,4 @@ enum class Decision {
     fun displayName(): String {
         return name.lowercase().replaceFirstChar { it.uppercase() }
     }
-
-    companion object {
-        val entries: List<Decision>
-            get() = values().toList()
-    }
 }
