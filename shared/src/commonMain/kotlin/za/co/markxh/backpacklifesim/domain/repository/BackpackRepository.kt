@@ -6,6 +6,6 @@ import za.co.markxh.backpacklifesim.domain.model.LifePath
 
 interface BackpackRepository {
     suspend fun loadBackPack(): Backpack
-    suspend fun submitChoices(choices: List<Choice>)
-    suspend fun getLifePath(): LifePath
+    suspend fun submitChoices(choices: List<Choice>): Result<Unit>
+    suspend fun fetchLifePath(): LifePath
 }

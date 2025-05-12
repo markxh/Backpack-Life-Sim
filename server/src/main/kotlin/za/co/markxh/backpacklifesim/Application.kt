@@ -97,8 +97,8 @@ fun applyChoices(choices: List<Choice>) {
         lifeEvents.add(
             LifeEvent(
                 date = LocalDate.now().toString(),
-                description = "$effectDescription (Item name: ${choice.name})",
-                iconName = TODO(),
+                description = effectDescription,
+                iconName = "placeholder_icon",
                 title = choice.name
             )
         )

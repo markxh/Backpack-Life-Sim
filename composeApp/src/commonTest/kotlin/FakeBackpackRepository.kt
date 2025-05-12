@@ -47,7 +47,7 @@ class FakeBackpackRepository : BackpackRepository {
         // Record or no-op
     }
 
-    override suspend fun getLifePath(): LifePath {
+    override suspend fun fetchLifePath(): LifePath {
         return LifePath(
             listOf(
                 LifeEvent(

@@ -44,18 +44,6 @@ class BackpackViewModel(
         }
     }
 
-    private fun loadLifePath() {
-        viewModelScope.launch {
-            _lifePathState.value = LifePathState.Loading
-            try {
-                val lifePath = loadLifePathUseCase()
-                _lifePathState.value = LifePathState.Loaded(lifePath)
-            } catch (e: Exception) {
-                _lifePathState.value = LifePathState.Error(e.message ?: AppStrings.errorOccurred)
-            }
-        }
-    }
-
     fun updateChoice(itemId: String, name: String, decision: Decision) {
         _selectedChoices.removeAll { it.itemId == itemId }
         _selectedChoices.add(Choice(itemId = itemId, name = name, decision = decision))
@@ -69,12 +57,25 @@ class BackpackViewModel(
     private fun submitChoices() {
         viewModelScope.launch {
             _backpackState.value = BackpackState.Loading
-            try {
-                submitChoicesUseCase(_selectedChoices)
+            val result = submitChoicesUseCase(_selectedChoices)
+
+            if (result.isSuccess) {
                 _backpackState.value = BackpackState.Submitted
                 loadLifePath()
-            } catch (e: Exception) {
+            } else {
                 _backpackState.value = BackpackState.Error(AppStrings.errorOccurred)
+            }
+        }
+    }
+
+    private fun loadLifePath() {
+        viewModelScope.launch {
+            _lifePathState.value = LifePathState.Loading
+            try {
+                val lifePath = loadLifePathUseCase()
+                _lifePathState.value = LifePathState.Loaded(lifePath)
+            } catch (e: Exception) {
+                _lifePathState.value = LifePathState.Error(e.message ?: AppStrings.errorOccurred)
             }
         }
     }
@@ -86,6 +87,10 @@ class BackpackViewModel(
     fun timeSinceSubmission(): Long {
         val now = clock.currentTimeMillis()
         return now - (submitStartTime ?: now)
+    }
+
+    fun clearLifePathState() {
+        _lifePathState.value = LifePathState.Idle
     }
 }
 

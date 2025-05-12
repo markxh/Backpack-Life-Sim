@@ -7,6 +7,6 @@ open class LoadLifePathUseCase(
     private val backpackRepository: BackpackRepository
 ) {
     open suspend operator fun invoke(): LifePath {
-        return backpackRepository.getLifePath()
+        return backpackRepository.fetchLifePath()
     }
 }

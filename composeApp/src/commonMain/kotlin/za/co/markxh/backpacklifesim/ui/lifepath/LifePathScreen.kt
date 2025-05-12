@@ -76,6 +76,12 @@ fun LifePathScreen(
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
+                                    text = event.title,
+                                    style = MaterialTheme.typography.h6,
+                                    color = PrimaryColor
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
                                     text = event.description,
                                     style = MaterialTheme.typography.body1,
                                     color = PrimaryColor

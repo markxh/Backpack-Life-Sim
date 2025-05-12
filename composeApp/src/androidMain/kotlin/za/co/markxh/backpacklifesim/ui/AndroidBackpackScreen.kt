@@ -2,13 +2,10 @@ package za.co.markxh.backpacklifesim.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
-import za.co.markxh.backpacklifesim.state.BackpackState
 
 @Composable
 fun AndroidBackpackScreen(
@@ -16,23 +13,19 @@ fun AndroidBackpackScreen(
     onNavigateToLifePath: () -> Unit
 ) {
     val backpackState by viewModel.backpackState.collectAsState()
+    val lifePathState by viewModel.lifePathState.collectAsState()
     val selectedChoices = viewModel.selectedChoices
-
-    LaunchedEffect(backpackState) {
-        if (backpackState is BackpackState.Submitted) {
-            val remaining = (3000 - viewModel.timeSinceSubmission()).coerceAtLeast(0)
-            delay(remaining)
-            onNavigateToLifePath()
-        }
-    }
 
     BackpackScreen(
         backpackState = backpackState,
+        lifePathState = lifePathState,
         selectedChoices = selectedChoices,
         onItemChoice = viewModel::updateChoice,
         onLoadBackpack = viewModel::loadBackpack,
         onSubmitChoices = viewModel::finalizeSubmission,
-        onNavigateToLifePath = onNavigateToLifePath,
+        onNavigateToLifePath = {
+            onNavigateToLifePath()
+        },
         modifier = Modifier.fillMaxSize()
     )
 }

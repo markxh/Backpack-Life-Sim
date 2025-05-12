@@ -14,11 +14,11 @@ class BackpackRepositoryImpl(
         return apiClient.fetchBackpack()
     }
 
-    override suspend fun submitChoices(choices: List<Choice>) {
-        apiClient.submitChoices(choices)
+    override suspend fun submitChoices(choices: List<Choice>): Result<Unit> {
+        return apiClient.submitChoices(choices)
     }
 
-    override suspend fun getLifePath(): LifePath {
+    override suspend fun fetchLifePath(): LifePath {
         return apiClient.fetchLifePath()
     }
 }

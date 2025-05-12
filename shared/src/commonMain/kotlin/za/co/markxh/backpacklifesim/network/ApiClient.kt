@@ -31,10 +31,12 @@ class ApiClient {
         return httpClient.get("$baseUrl/backpack/today").body()
     }
 
-    suspend fun submitChoices(choices: List<Choice>) {
-        httpClient.post("$baseUrl/backpack/choose") {
-            contentType(ContentType.Application.Json)
-            setBody(choices)
+    suspend fun submitChoices(choices: List<Choice>): Result<Unit> {
+        return runCatching {
+            httpClient.post("$baseUrl/backpack/choose") {
+                contentType(ContentType.Application.Json)
+                setBody(choices)
+            }
         }
     }
 

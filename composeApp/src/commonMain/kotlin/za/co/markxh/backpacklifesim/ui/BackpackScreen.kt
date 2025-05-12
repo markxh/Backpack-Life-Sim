@@ -46,6 +46,7 @@ import za.co.markxh.backpacklifesim.domain.model.Choice
 import za.co.markxh.backpacklifesim.domain.model.Decision
 import za.co.markxh.backpacklifesim.domain.model.Item
 import za.co.markxh.backpacklifesim.state.BackpackState
+import za.co.markxh.backpacklifesim.state.LifePathState
 import za.co.markxh.backpacklifesim.ui.theme.AppSpacing
 import za.co.markxh.backpacklifesim.ui.theme.AppStrings
 import za.co.markxh.backpacklifesim.ui.theme.BackgroundColor
@@ -58,16 +59,15 @@ import za.co.markxh.backpacklifesim.ui.theme.SecondaryTextColor
 @Composable
 fun BackpackScreen(
     backpackState: BackpackState,
-    selectedChoices: List<Choice>,
+    lifePathState: LifePathState,
     onItemChoice: (itemId: String, name: String, decision: Decision) -> Unit,
     onSubmitChoices: () -> Unit,
     onLoadBackpack: () -> Unit,
     onNavigateToLifePath: () -> Unit,
     modifier: Modifier = Modifier,
+    selectedChoices: List<Choice>
 ) {
-    LaunchedEffect(Unit) {
-        onLoadBackpack()
-    }
+    LaunchedEffect(Unit) { onLoadBackpack() }
 
     LaunchedEffect(selectedChoices.size, backpackState) {
         if (backpackState is BackpackState.Loaded &&
@@ -77,9 +77,8 @@ fun BackpackScreen(
         }
     }
 
-    LaunchedEffect(backpackState) {
-        if (backpackState is BackpackState.Submitted) {
-            delay(3000)
+    LaunchedEffect(lifePathState) {
+        if (lifePathState is LifePathState.Loaded) {
             onNavigateToLifePath()
         }
     }
@@ -128,78 +127,6 @@ fun BackpackItemList(
         }
     }
 }
-
-//@Composable
-//fun ItemCard(
-//    item: Item,
-//    onItemChoice: (itemId: String, name: String, decision: Decision) -> Unit
-//) {
-//    var visible by remember { mutableStateOf(true) }
-//    val scope = rememberCoroutineScope()
-//
-//    AnimatedVisibility(
-//        visible = visible,
-//        exit = slideOutHorizontally(
-//            targetOffsetX = { fullWidth -> fullWidth },
-//            animationSpec = tween(durationMillis = 300)
-//        ) + fadeOut(animationSpec = tween(durationMillis = 300))
-//    ) {
-//        Card(
-//            elevation = AppSpacing.small,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(bottom = AppSpacing.small)
-//        ) {
-//            Row(
-//                modifier = Modifier.padding(AppSpacing.medium),
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                AsyncImage(
-//                    model = item.imageUrl,
-//                    contentDescription = item.name,
-//                    modifier = Modifier
-//                        .clip(MaterialTheme.shapes.medium)
-//                        .weight(1f)
-//                )
-//
-//                Spacer(modifier = Modifier.width(AppSpacing.medium))
-//
-//                Column(
-//                    verticalArrangement = Arrangement.spacedBy(AppSpacing.small),
-//                    modifier = Modifier.weight(1f)
-//                ) {
-//                    Text(item.name, style = MaterialTheme.typography.h6, color = PrimaryColor)
-//                    Text(item.description, style = MaterialTheme.typography.body2, color = SecondaryTextColor)
-//
-//                    Spacer(modifier = Modifier.height(AppSpacing.small))
-//
-//                    Decision.entries.forEach { decision ->
-//                        Button(
-//                            onClick = {
-//                                visible = false
-//                                scope.launch {
-//                                    delay(300)
-//                                    onItemChoice(item.id, item.name, decision)
-//                                }
-//                            },
-//                            colors = ButtonDefaults.buttonColors(
-//                                backgroundColor = Color.Transparent,
-//                                contentColor = PrimaryColor
-//                            ),
-//                            modifier = Modifier.fillMaxWidth(),
-//                            elevation = ButtonDefaults.elevation(defaultElevation = 0.dp, pressedElevation = 0.dp)
-//                        ) {
-//                            Text(
-//                                decision.name.lowercase().replaceFirstChar { it.uppercase() },
-//                                color = PrimaryColor
-//                            )
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
 
 @Composable
 fun ItemCard(

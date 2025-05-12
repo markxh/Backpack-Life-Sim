@@ -36,6 +36,7 @@ fun BackpackNavGraph(
                 state = lifePathState,
                 onBack = { navController.popBackStack() }
             )
+//            viewModel.clearLifePathState()
         }
     }
 }
