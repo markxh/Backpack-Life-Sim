@@ -61,22 +61,10 @@ fun BackpackScreen(
     backpackState: BackpackState,
     lifePathState: LifePathState,
     onItemChoice: (itemId: String, name: String, decision: Decision) -> Unit,
-    onSubmitChoices: () -> Unit,
-    onLoadBackpack: () -> Unit,
     onNavigateToLifePath: () -> Unit,
     modifier: Modifier = Modifier,
     selectedChoices: List<Choice>
 ) {
-    LaunchedEffect(Unit) { onLoadBackpack() }
-
-    LaunchedEffect(selectedChoices.size, backpackState) {
-        if (backpackState is BackpackState.Loaded &&
-            selectedChoices.size == backpackState.backpack.items.size
-        ) {
-            onSubmitChoices()
-        }
-    }
-
     LaunchedEffect(lifePathState) {
         if (lifePathState is LifePathState.Loaded) {
             onNavigateToLifePath()

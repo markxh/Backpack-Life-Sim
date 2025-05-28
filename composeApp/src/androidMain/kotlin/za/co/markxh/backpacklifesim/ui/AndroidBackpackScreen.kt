@@ -21,8 +21,6 @@ fun AndroidBackpackScreen(
         lifePathState = lifePathState,
         selectedChoices = selectedChoices,
         onItemChoice = viewModel::updateChoice,
-        onLoadBackpack = viewModel::loadBackpack,
-        onSubmitChoices = viewModel::finalizeSubmission,
         onNavigateToLifePath = {
             onNavigateToLifePath()
         },

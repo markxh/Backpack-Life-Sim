@@ -34,9 +34,11 @@ fun BackpackNavGraph(
             val lifePathState by viewModel.lifePathState.collectAsState()
             LifePathScreen(
                 state = lifePathState,
-                onBack = { navController.popBackStack() }
+                onBack = {
+                    navController.popBackStack()
+                    viewModel.clearLifePathState()
+                }
             )
-//            viewModel.clearLifePathState()
         }
     }
 }

@@ -29,7 +29,12 @@ class BackpackViewModel(
     private val _selectedChoices = mutableStateListOf<Choice>()
     val selectedChoices: List<Choice> get() = _selectedChoices
 
+    private var hasSubmitted = false
     private var submitStartTime: Long? = null
+
+    init {
+        loadBackpack()
+    }
 
     fun loadBackpack() {
         viewModelScope.launch {
@@ -47,11 +52,20 @@ class BackpackViewModel(
     fun updateChoice(itemId: String, name: String, decision: Decision) {
         _selectedChoices.removeAll { it.itemId == itemId }
         _selectedChoices.add(Choice(itemId = itemId, name = name, decision = decision))
+
+        checkAndSubmitChoices()
     }
 
-    fun finalizeSubmission() {
-        recordSubmissionStartTime()
-        submitChoices()
+    private fun checkAndSubmitChoices() {
+        val currentState = _backpackState.value
+        if (
+            currentState is BackpackState.Loaded &&
+            !hasSubmitted &&
+            _selectedChoices.size == currentState.backpack.items.size
+        ) {
+            hasSubmitted = true
+            submitChoices()
+        }
     }
 
     private fun submitChoices() {

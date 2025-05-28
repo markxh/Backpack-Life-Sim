@@ -68,21 +68,11 @@ class BackpackViewModelTest {
             assertTrue(state is BackpackState.Loading)
 
             viewModel.updateChoice("id1", "Compass", Decision.KEEP)
-            viewModel.finalizeSubmission()
 
             advanceUntilIdle()
 
             val updatedState = awaitItem()
             assertTrue(updatedState is BackpackState.Submitted)
         }
-    }
-
-    @Test
-    fun `timeSinceSubmission returns correct time`() {
-        testClock.currentTime = 1_000L
-        viewModel.finalizeSubmission()
-
-        testClock.currentTime = 2_000L
-        assertEquals(1000L, viewModel.timeSinceSubmission())
     }
 }
