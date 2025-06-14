@@ -10,5 +10,6 @@ data class Item(
     val description: String,
     val type: ItemType,
     val rarity: Rarity,
-    val effect: String
+    val effect: String,
+    val imageUrl: String
 )

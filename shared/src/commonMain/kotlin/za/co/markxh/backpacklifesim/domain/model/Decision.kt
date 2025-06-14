@@ -1,3 +1,14 @@
 package za.co.markxh.backpacklifesim.domain.model
 
-enum class Decision { KEEP, USE, TOSS }
+import kotlinx.serialization.Serializable
+
+@Serializable
+enum class Decision {
+    KEEP,
+    USE,
+    TOSS;
+
+    fun displayName(): String {
+        return name.lowercase().replaceFirstChar { it.uppercase() }
+    }
+}

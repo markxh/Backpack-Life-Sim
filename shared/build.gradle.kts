@@ -67,4 +67,8 @@ android {
 }
 dependencies {
     implementation(libs.identity.jvm)
+    implementation(libs.androidx.lifecycle.viewmodel.android)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.androidx.ui.graphics.android)
 }
