@@ -97,7 +97,7 @@ MIT License — free to use, modify, and build upon.
 ---
 
 ## 📱 Screenshots
-![Screenshot](https://github.com/user-attachments/assets/551b7c28-6140-47b2-88ab-259a94ec54b6)
+![Screenshot](https://github.com/user-attachments/assets/e7848013-ca6d-4122-a20a-aec0852acef1)
 
 > Want to contribute? Feel free to open an issue or submit a PR!
 
